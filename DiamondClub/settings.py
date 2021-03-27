@@ -32,19 +32,21 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'UserProfile',
+    'coupon',
     'templatetags',
     'dal',
     'dal_select2',
     'selectable',
     'rest_framework',
     'ckeditor',
-    'rest_framework.authtoken',
+    'Users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework.authtoken',
 ]
 
 REST_FRAMEWORK = {
@@ -61,6 +63,9 @@ REST_FRAMEWORK = {
     ]
        
 }
+
+
+
 
 #AUTH_USER_MODEL = 
 
@@ -105,23 +110,15 @@ WSGI_APPLICATION = 'DiamondClub.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#    }
-#}
-
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'anirudh1117',
-        'HOST': 'localhost'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+
+
 
 
 
@@ -171,6 +168,12 @@ STATICFILES_DIRS = [
 ]
 
 
+#Message
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}
+
 # Media Folder Settings
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
@@ -178,5 +181,5 @@ MEDIA_URL = '/media/'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'teamrachnatmaksih2020@gmail.com'
-EMAIL_HOST_PASSWORD = 'rachnatmak2020'
+EMAIL_HOST_PASSWORD = 'qpvaarqwjhcgjxkz'
 EMAIL_PORT = 587

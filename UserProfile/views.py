@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Profile
-from dal import autocomplete
+#from dal import autocomplete
 from django.contrib.auth.models import User
-from .serializer import AuthCustomTokenSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer
+from django.contrib import messages
+from .forms import PasswordUpdationForm
+from .serializer import AuthCustomTokenSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer, ProfileSerializer,TokenSerializer
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -15,6 +17,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.core.mail import send_mail
+from django.http.response import JsonResponse
+from django.contrib.auth.hashers import make_password
 # Create your views here.
 
 
@@ -50,20 +54,22 @@ class ObtainAuthToken(APIView):
 
 
 class Logout(APIView):
-    # print('here hello')
     def get(self, request, format=None):
-        # print(request.data)
+        print(1)
         key = request.data['token']
+        print(key)
         if Token.objects.filter(key=key).exists():
             Token.objects.get(key=key).delete()
             content = {
                 "Message": "succesfully logout"
             }
+            return Response(content, status=status.HTTP_200_OK)
         else:
             content = {
-                "Message": "wrong token"
+                "Message": "Token is invalid"
             }
-        return Response(content, status=status.HTTP_200_OK)
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        
 
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
@@ -101,6 +107,39 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
 
 
 
+
+class Profile_Detail(APIView):
+    parser_classes = (
+        parsers.FormParser,
+        parsers.MultiPartParser,
+        parsers.JSONParser,
+        parsers.FileUploadParser,
+    )
+    
+    def post(self,request):
+        serializer = TokenSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            profile = serializer.validated_data['profile']
+            profile_S = ProfileSerializer(profile,context={"request": request})
+            return JsonResponse(profile_S.data,safe=False)
+        else:
+             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self,request):
+        serializer = TokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        profile = serializer.validated_data['profile']
+        profile_S = ProfileSerializer(profile,data=request.data, partial=True,context={"request": request})
+        if(profile_S.is_valid(raise_exception=True)):
+            profile_S.save()
+            return JsonResponse(profile_S.data,safe=False)
+
+        return JsonResponse(profile_S.errors, status=status.HTTP_400_BAD_REQUEST) 
+        
+
+
+
+
 #class UserAutoComplete(autocomplete.Select2QuerySetView):
 #    def get_queryset(self):
 #        if not self.request.user.is_authenticated:
@@ -112,3 +151,29 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
 #            qs = qs.filter(username__istartswith=self.q)
 
 #        return qs
+
+
+
+
+def passwordreset(request,token):
+    if request.method == 'POST':
+        form = PasswordUpdationForm(request.POST)
+        if form.is_valid():
+            password = request.POST['password']
+            if not Token.objects.filter(key=token).exists():
+                messages.error(request,'Link is not valid. Please Contact admin to resend the mail')
+            else:
+                token12 = Token.objects.get(key=token)
+                password=make_password(password,hasher='default')
+                user12 = User.objects.filter(username__exact=token12.user).update(password=password)
+                Token.objects.get(key=token).delete()
+                messages.success(request,'Password Change successfully!!')
+                return redirect('https://writexo.com/')
+        messages.error(request,'Password and confirm Password does not matches')
+             
+    form = PasswordUpdationForm()
+    context={
+            'token':token,
+            'form':form
+        }
+    return render(request, 'Users/password-change.html',context)

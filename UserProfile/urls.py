@@ -3,7 +3,7 @@ from dal import autocomplete
 from .models import Profile
 from django.conf.urls import url
 from rest_framework.authtoken import views
-from .views import ObtainAuthToken,Logout,RequestPasswordResetEmail,SetNewPasswordAPIView
+from .views import ObtainAuthToken,Logout,RequestPasswordResetEmail,SetNewPasswordAPIView, Profile_Detail,passwordreset
 
 urlpatterns = [
     #path('User-autocomplete/$',autocomplete.Select2QuerySetView.as_view(model=Profile),name='User-autocomplete'),
@@ -14,6 +14,9 @@ urlpatterns = [
          name="request-reset-email"),
     path('password-reset/',
          SetNewPasswordAPIView.as_view(), name='password-reset-confirm'),
+
+    path('get-profile/',Profile_Detail.as_view(),name='get-profile'),
+    path(r'^password-reset-confirm/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',passwordreset,name='password-reset'),
     
     
     

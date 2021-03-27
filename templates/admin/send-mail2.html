@@ -1,0 +1,35 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static admin_modify %}
+{% load static %}
+{% block extrahead %}{{ block.super }}
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="align-content: center;">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        Email</h2>
+                </div>
+                <div class="card-body">
+                    <form action="{% url 'admin:send-group-email' %}" method="POST">
+                        {% csrf_token %} 
+                       
+                        <div >
+                            <label for="reciever">Reciever:</label><br>
+                            <input type="email" name="email" value="{{ reciever }}" style="width: 150%;" readonly><br><br>
+                            {{ form.media }}
+                            {{ form.as_p }}
+
+                        </div>
+
+                        <input type="submit" value="Send" class="btn btn-success">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

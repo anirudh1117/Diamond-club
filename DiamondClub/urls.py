@@ -21,6 +21,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('UserProfile/',include('UserProfile.urls')),
+    path('Coupon/',include('coupon.urls')),
+    path('Users/',include('Users.urls')),
     path('admin/', admin.site.urls),
     url(r'^selectable/', include('selectable.urls')),
 ]+ static(settings.MEDIA_URL,document_root= settings.MEDIA_ROOT)

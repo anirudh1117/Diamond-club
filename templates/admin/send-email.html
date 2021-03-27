@@ -5,31 +5,35 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 {% endblock %}
 
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" />
+{% endblock %}
+
+
+
 {% block content %}
-<div class="container" style="align-content: center;">
-    <div class="row">
-        <div class="col-md-6 mx-auto">
-            <div class="card">
-                <div class="card-header">
-                    <h2>
-                        Email</h2>
-                </div>
-                <div class="card-body">
-                    <form action="" method="POST">
-                        {% csrf_token %}
-                       
-                        <div >
-                            <label for="reciever">Reciever:</label><br>
-                            <input type="email" name="email" value="{{ reciever }}" style="width: 150%;" readonly><br><br>
-                            {{ form.media }}
-                            {{ form.as_p }}
+<div id="content-main">
+    <div class="col-sm-9 form-fields">
+        <div class="panel panel-default form-panel">
+            <h2 style="align-content: center;">Email</h2>
+            <div class="panel-body">
 
-                        </div>
 
-                        <input type="submit" value="Send" class="btn btn-success">
-                    </form>
-                </div>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <label for="reciever">Reciever:</label><br>
+                    <input type="email" name="email" value="{{ reciever }}" style="width: 50%;" readonly><br><br>
+                    {{ form.media }}
+                    {{ form.as_p }}
+
+
+                    <input type="submit" value="Send" class="btn btn-success">
+
+                </form>
             </div>
         </div>
     </div>
-    {% endblock %}
+
+</div>
+{% endblock %}

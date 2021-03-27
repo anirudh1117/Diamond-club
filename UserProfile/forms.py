@@ -37,5 +37,39 @@ class EmailForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(EmailForm, self).__init__(*args, **kwargs) # Call to ModelForm constructor
-        self.fields['Subject'].widget.attrs['cols'] = 20
-        self.fields['Subject'].widget.attrs['rows'] = 4
+        self.fields['Subject'].widget.attrs['cols'] = 0
+        self.fields['Subject'].widget.attrs['rows'] = 2
+
+
+
+class PasswordUpdationForm(forms.Form):
+    password = forms.CharField(max_length = 20, min_length = 8,
+    widget = forms.PasswordInput(
+        attrs = {'class' : 'form-control',
+                'id' : 'pwd',
+                'placeholder' : 'Enter Password'}))
+    Confirm_password = forms.CharField(max_length = 20, min_length = 8,
+    widget = forms.PasswordInput(
+        attrs = {'class' : 'form-control',
+                'id' : 'rpwd',
+                'placeholder' : 'Confirm Password'}))
+    
+    class Meta:
+        fields = ('__all__')
+        widgets = {
+            'password' : forms.PasswordInput(attrs = {
+                'class' : 'form-control',
+                'id' : 'pwd',
+                'placeholder' : 'Enter Password',
+                'required' : True
+            })
+        }
+    def clean(self):
+        cleaned_data = super(PasswordUpdationForm, self).clean()
+        password = cleaned_data.get("password")
+        c_password = cleaned_data.get("Confirm_password")
+        print(password)
+        if password != c_password:
+            raise forms.ValidationError(
+            "Password Does not match."
+        )
