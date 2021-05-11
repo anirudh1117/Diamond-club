@@ -180,6 +180,5 @@ MEDIA_URL = '/media/'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'teamrachnatmaksih2020@gmail.com'
-EMAIL_HOST_PASSWORD = 'qpvaarqwjhcgjxkz'
+EMAIL_HOST_USER = 'teamrachnatmaksih'
 EMAIL_PORT = 587
